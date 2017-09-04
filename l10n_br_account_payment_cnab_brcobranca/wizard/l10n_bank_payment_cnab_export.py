@@ -1,10 +1,13 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# Copyright 2017 Akretion
+# @author Raphaël Valyi <raphael.valyi@akretion.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import base64
 import time
 
 from openerp import models, api, workflow, fields, _
-from openerp.exceptions import Warning as UserError
+from openerp.addons.l10n_br_base.tools.misc import punctuation_rm
 
 import logging
 
@@ -20,6 +23,26 @@ try:
     from cnab240.errors import (Cnab240Error)
 except ImportError as err:
     _logger.debug = err
+
+dict_brcobranca_bank = {
+    '001': 'banco_brasil',
+    '041': 'banrisul',
+    '237': 'bradesco',
+    '104': 'caixa',
+    '399': 'hsbc',
+    '341': 'itau',
+    '033': 'santander',
+    '748': 'sicredi',
+    # banks implemented in brcobranca but not in Python:
+    # '004': 'banco_nordeste',
+    # '021': 'banestes',
+    # '756': 'sicoob',
+}
+
+dict_brcobranca_cnab_type = {
+    '240': 'cnab240',
+    '400': 'cnab400',
+}
 
 
 class L10nPaymentCnab(models.TransientModel):
@@ -42,45 +65,78 @@ class L10nPaymentCnab(models.TransientModel):
             # and a test here:
             # https://github.com/kivanio/brcobranca/blob/master/spec/brcobranca/remessa/cnab400/itau_spec.rb
 
-            pagamentos = [{
-                      'valor': 199.9,
-               #'data_vencimento': Date.current,
-               'nosso_numero': 123,
-               'documento_sacado': '12345678901',
-               'nome_sacado': 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-               'endereco_sacado': 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
-               'bairro_sacado': 'São josé dos quatro apostolos magros',
-               'cep_sacado': '12345678',
-               'cidade_sacado': 'Santa rita de cássia maria da silva',
-               'uf_sacado': 'SP'
-            }]
+            if order.mode.bank_id.bank.bic in \
+                    dict_brcobranca_bank:
+                bank_name_brcobranca = dict_brcobranca_bank[
+                                           order.mode.bank_id.bank.bic],
+            else:
+                raise UserError(
+                    _('The Bank %s is not implemented in BRCobranca.')
+                    % order.mode.bank_id.bank.name)
+
+            if (bank_name_brcobranca[0] != 'bradesco'
+                and order.mode.type.code != '400'):
+                raise UserError(
+                    _('The Bank %s and CNAB %s is not implemented.')
+                    % (order.mode.bank_id.bank.name,
+                       order.mode.type.code))
+
+            pagamentos = []
+            for line in order.line_ids:
+
+                linhas_pagamentos = {
+                   'valor': line.amount_currency,
+                   'data_vencimento': line.move_line_id.date_maturity,
+                   'nosso_numero': line.seu_numero or line.id,
+                   'documento_sacado':
+                       punctuation_rm(line.partner_id.cnpj_cpf),
+                   'nome_sacado': line.partner_id.legal_name,
+                   'endereco_sacado': str(
+                       line.partner_id.street + ', ' + str(
+                           line.partner_id.number)).encode('utf-8'),
+                   'bairro_sacado': line.partner_id.district.encode('utf-8'),
+                   'cep_sacado': punctuation_rm(line.partner_id.zip),
+                   'cidade_sacado':
+                       line.partner_id.l10n_br_city_id.name.encode('utf-8'),
+                   'uf_sacado': line.partner_id.state_id.code,
+                }
+                pagamentos.append(linhas_pagamentos)
 
             remessa_values = {
-              'carteira': '123',
-              'agencia': '1234',
-              'conta_corrente': '12345',
-              'digito_conta': '1',
-              'empresa_mae': 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
-              'documento_cedente': '12345678910',
-              'pagamentos': pagamentos
+              'carteira': str(order.tipo_servico),
+              'agencia': int(order.mode.bank_id.bra_number),
+              # 'digito_agencia': order.mode.bank_id.bra_number_dig,
+              'conta_corrente': int(punctuation_rm(order.mode.bank_id.acc_number)),
+              'digito_conta': order.mode.bank_id.acc_number_dig[0],
+              'empresa_mae':
+                  order.mode.bank_id.partner_id.legal_name[:30].encode('utf-8'),
+              'documento_cedente': punctuation_rm(
+                  order.mode.bank_id.partner_id.cnpj_cpf),
+              'pagamentos': pagamentos,
+              'codigo_empresa': int(order.mode.codigo_convenio),
+              'sequencial_remessa': order.id,
             }
 
             content = json.dumps(remessa_values)
-            print content
+            # print content
             f = open(tempfile.mktemp(), 'w')
             f.write(content)
             f.close()
             files = {'data': open(f.name, 'rb')}
-            res = requests.post("http://boleto_api:9292/api/remessa",
-                                data={'type': 'cnab400', 'bank':'itau'},
-                                files=files)
-            print "AAAAAAAA", res.status_code
-            if str(res.status_code)[0] == '2':
-               remessa= res.content
+            res = requests.post(
+                "http://boleto_api:9292/api/remessa",
+                data={
+                    'type': dict_brcobranca_cnab_type[order.mode.type.code],
+                    'bank': bank_name_brcobranca[0],
+                }, files=files)
+            # print "AAAAAAAA", res.status_code, str(res.status_code)[0]
+            # print 'RES.CONTENT', res.content
+            if res.content[0] == '"':
+                remessa = res.content
             else:
-               raise UserError(res.text)
+                raise UserError(res.text)
 
-            print remessa
+            # print remessa
             self.state = 'done'
             self.cnab_file = base64.b64encode(remessa)
 
