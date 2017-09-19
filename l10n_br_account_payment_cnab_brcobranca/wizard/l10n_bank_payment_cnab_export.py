@@ -131,7 +131,7 @@ class L10nPaymentCnab(models.TransientModel):
                 }, files=files)
             # print "AAAAAAAA", res.status_code, str(res.status_code)[0]
             # print 'RES.CONTENT', res.content
-            if res.content[0] == '"':
+            if res.content[0] == '0':
                 remessa = res.content
             else:
                 raise UserError(res.text)
