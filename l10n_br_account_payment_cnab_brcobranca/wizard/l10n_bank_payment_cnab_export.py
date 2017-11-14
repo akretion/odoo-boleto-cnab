@@ -84,26 +84,29 @@ class L10nPaymentCnab(models.TransientModel):
             pagamentos = []
             for line in order.line_ids:
 
+                if len(line.move_line_id.transaction_ref) == 16:
+                    our_number = line.move_line_id.transaction_ref[3:-2]
+
                 linhas_pagamentos = {
-                   'valor': line.amount_currency,
-                   'data_vencimento': line.move_line_id.date_maturity,
-                   'nosso_numero': line.seu_numero or line.id,
-                   'documento_sacado':
-                       punctuation_rm(line.partner_id.cnpj_cpf),
-                   'nome_sacado': line.partner_id.legal_name,
-                   'endereco_sacado': str(
+                    'valor': line.amount_currency,
+                    'data_vencimento': line.move_line_id.date_maturity,
+                    'nosso_numero': our_number or line.id,
+                    'documento_sacado': punctuation_rm(line.partner_id.cnpj_cpf),
+                    'nome_sacado': line.partner_id.legal_name,
+                    'numero_documento': str(line.move_line_id.name.encode('utf-8')),
+                    'endereco_sacado': str(
                        line.partner_id.street + ', ' + str(
                            line.partner_id.number)).encode('utf-8'),
-                   'bairro_sacado': line.partner_id.district.encode('utf-8'),
-                   'cep_sacado': punctuation_rm(line.partner_id.zip),
-                   'cidade_sacado':
+                    'bairro_sacado': line.partner_id.district.encode('utf-8'),
+                    'cep_sacado': punctuation_rm(line.partner_id.zip),
+                    'cidade_sacado':
                        line.partner_id.l10n_br_city_id.name.encode('utf-8'),
-                   'uf_sacado': line.partner_id.state_id.code,
+                    'uf_sacado': line.partner_id.state_id.code,
                 }
                 pagamentos.append(linhas_pagamentos)
 
             remessa_values = {
-              'carteira': str(order.tipo_servico),
+              'carteira': str(order.mode.boleto_carteira),
               'agencia': int(order.mode.bank_id.bra_number),
               # 'digito_agencia': order.mode.bank_id.bra_number_dig,
               'conta_corrente': int(punctuation_rm(order.mode.bank_id.acc_number)),
