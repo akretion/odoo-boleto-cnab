@@ -11,9 +11,11 @@
     'license': 'AGPL-3',
     'author': 'Akretion',
     'website': 'www.akretion.com',
-    'depends': ['l10n_br_account_banking_payment_cnab',
+    'depends': [
+        'l10n_br_account_banking_payment_cnab'
     ],
     'data': [
+        'views/payment_mode.xml'
     ],
     'demo': [
     ],

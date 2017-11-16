@@ -84,7 +84,9 @@ class L10nPaymentCnab(models.TransientModel):
             pagamentos = []
             for line in order.line_ids:
 
-                if len(line.move_line_id.transaction_ref) == 16:
+                our_number = ''
+
+                if len(line.move_line_id.transaction_ref or '') == 16:
                     our_number = line.move_line_id.transaction_ref[3:-2]
 
                 linhas_pagamentos = {
@@ -102,22 +104,24 @@ class L10nPaymentCnab(models.TransientModel):
                     'cidade_sacado':
                        line.partner_id.l10n_br_city_id.name.encode('utf-8'),
                     'uf_sacado': line.partner_id.state_id.code,
+                    'identificacao_ocorrencia': order.codigo_instrucao_movimento
                 }
                 pagamentos.append(linhas_pagamentos)
 
             remessa_values = {
-              'carteira': str(order.mode.boleto_carteira),
-              'agencia': int(order.mode.bank_id.bra_number),
-              # 'digito_agencia': order.mode.bank_id.bra_number_dig,
-              'conta_corrente': int(punctuation_rm(order.mode.bank_id.acc_number)),
-              'digito_conta': order.mode.bank_id.acc_number_dig[0],
-              'empresa_mae':
+                'carteira': str(order.mode.boleto_carteira),
+                'agencia': int(order.mode.bank_id.bra_number),
+                # 'digito_agencia': order.mode.bank_id.bra_number_dig,
+                'conta_corrente': int(punctuation_rm(order.mode.bank_id.acc_number)),
+                'digito_conta': order.mode.bank_id.acc_number_dig[0],
+                'empresa_mae':
                   order.mode.bank_id.partner_id.legal_name[:30].encode('utf-8'),
-              'documento_cedente': punctuation_rm(
-                  order.mode.bank_id.partner_id.cnpj_cpf),
-              'pagamentos': pagamentos,
-              'codigo_empresa': int(order.mode.codigo_convenio),
-              'sequencial_remessa': order.id,
+                'documento_cedente': punctuation_rm(
+                    order.mode.bank_id.partner_id.cnpj_cpf),
+                'pagamentos': pagamentos,
+                'codigo_empresa': int(order.mode.codigo_convenio),
+                'sequencial_remessa': self.env['ir.sequence'].next_by_id(
+                    order.mode.cnab_sequence_id.id)
             }
 
             content = json.dumps(remessa_values)
@@ -127,7 +131,7 @@ class L10nPaymentCnab(models.TransientModel):
             f.close()
             files = {'data': open(f.name, 'rb')}
             res = requests.post(
-                "http://boleto_cnab_api:9292/api/remessa",
+                "http://172.16.98.2:9292/api/remessa",
                 data={
                     'type': dict_brcobranca_cnab_type[order.mode.type.code],
                     'bank': bank_name_brcobranca[0],
@@ -152,9 +156,9 @@ class L10nPaymentCnab(models.TransientModel):
             if order.mode.type.code == '240':
                 self.name = 'CB%s%s.REM' % (
                     time.strftime('%d%m'), str(order.file_number))
-            # elif order.mode.type.code == '400':
-            #     self.name = 'CB%s%s.REM' % (
-            #         time.strftime('%d%m'), str(suf_arquivo))
+            elif order.mode.type.code == '400':
+                self.name = 'CB%s%02d.REM' % (
+                    time.strftime('%d%m'), order.file_number or 1)
             elif order.mode.type.code == '500':
                 self.name = 'PG%s%s.REM' % (
                     time.strftime('%d%m'), str(order.file_number))
