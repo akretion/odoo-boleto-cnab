@@ -15,7 +15,8 @@
         'l10n_br_account_banking_payment_cnab'
     ],
     'data': [
-        'views/payment_mode.xml'
+        'views/payment_mode.xml',
+        'views/l10n_br_cnab_retorno_view.xml',
     ],
     'demo': [
     ],
