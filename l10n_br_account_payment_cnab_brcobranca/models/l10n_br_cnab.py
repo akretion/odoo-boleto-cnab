@@ -64,10 +64,10 @@ class L10nBrHrCnab(models.Model):
     _inherit = "l10n.br.cnab"
 
     account_journal = fields.Many2one(
-        'account.journal', 'Journal used in Statement',
+        'account.journal', 'Journal used in Bank Statement',
         readonly=True,
         states={'draft': [('readonly', False)]},
-        help='Journal used to create Statement.'
+        help='Journal used in create of Bank Statement.'
     )
     cnab_type = fields.Selection(
         [('cnab400', u'CNAB 400')], 'CNAB Type File',
