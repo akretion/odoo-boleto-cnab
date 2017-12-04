@@ -120,8 +120,11 @@ class L10nBrHrCnab(models.Model):
                 continue
 
             quantidade_registros += 1
-            obj_account_move_line = self.env['account.move.line'].search(
+            account_move_line = self.env['account.move.line'].search(
                 [('boleto_own_number', '=', dict_line['nosso_numero'][:11])]
+            )
+            payment_line = self.env['payment.line'].search(
+                [('move_line_id', '=', account_move_line.id)]
             )
 
             valor_titulo = float(
@@ -142,7 +145,7 @@ class L10nBrHrCnab(models.Model):
                 data_ocorrencia = datetime.datetime.strptime(
                     str(dict_line['data_ocorrencia']), "%d%m%y").date()
 
-            if not obj_account_move_line:
+            if not account_move_line:
                 vals_evento = {
                    'lote_id': lote_id.id,
                    'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
@@ -173,40 +176,30 @@ class L10nBrHrCnab(models.Model):
                     #'favorecido_nome':
                     #    obj_account_move_line.company_id.partner_id.name,
                     'favorecido_conta_bancaria':
-                        obj_account_move_line.payment_mode_id.bank_id.id,
+                        account_move_line.payment_mode_id.bank_id.id,
                     'nosso_numero': dict_line['nosso_numero'],
                     'seu_numero': dict_line['documento_numero'] or
-                        obj_account_move_line.name,
+                        account_move_line.name,
                     # 'tipo_moeda': evento.credito_moeda_tipo,
                     'valor_titulo': valor_titulo,
                     'valor_pagamento': valor_recebido,
                     'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
                         dict_line['codigo_ocorrencia']].encode('utf-8'),
-                    # 'str_motiv_a': ocorrencias_dic[ocorrencias[0]] if
-                    # ocorrencias[0] else '',
-                    # 'str_motiv_b': ocorrencias_dic[ocorrencias[1]] if
-                    # ocorrencias[1] else '',
-                    # 'str_motiv_c': ocorrencias_dic[ocorrencias[2]] if
-                    # ocorrencias[2] else '',
-                    # 'str_motiv_d': ocorrencias_dic[ocorrencias[3]] if
-                    # ocorrencias[3] else '',
-                    # 'str_motiv_e': ocorrencias_dic[ocorrencias[4]] if
-                    # ocorrencias[4] else '',
-                    # 'lote_id': lote_id.id,
-                    # 'bank_payment_line_id': bank_payment_line_id.id,
+                    'bank_payment_line_id':
+                        payment_line.bank_line_id.id or False,
                 }
 
                 # Monta o dicionario que sera usado
                 # para criar o Extrato Bancario
                 balance_end_real += valor_recebido
                 line_statement_vals.append({
-                    'name': obj_account_move_line.name or '?',
+                    'name': account_move_line.name or '?',
                     'amount': valor_recebido,
-                    'partner_id': obj_account_move_line.partner_id.id,
-                    'ref': obj_account_move_line.ref,
-                    'date': obj_account_move_line.date,
+                    'partner_id': account_move_line.partner_id.id,
+                    'ref': account_move_line.ref,
+                    'date': account_move_line.date,
                     'amount_currency': valor_recebido,
-                    'currency_id': obj_account_move_line.currency_id.id,
+                    'currency_id': account_move_line.currency_id.id,
                 })
 
             else:
@@ -216,7 +209,7 @@ class L10nBrHrCnab(models.Model):
                         dict_line['codigo_ocorrencia']].encode('utf-8'),
                     'data_ocorrencia': data_ocorrencia,
                     'nosso_numero': dict_line['nosso_numero'],
-                    'seu_numero': obj_account_move_line.name,
+                    'seu_numero': account_move_line.name,
                     'valor_titulo': valor_titulo,
                 }
 
