@@ -131,7 +131,7 @@ class L10nPaymentCnab(models.TransientModel):
             f.close()
             files = {'data': open(f.name, 'rb')}
             res = requests.post(
-                "http://172.16.98.2:9292/api/remessa",
+                "http://boleto_cnab_api:9292/api/remessa",
                 data={
                     'type': dict_brcobranca_cnab_type[order.mode.type.code],
                     'bank': bank_name_brcobranca[0],
