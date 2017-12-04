@@ -14,13 +14,16 @@
                     <field name="valor_titulo" />
                 </field>
                 <field name="str_motiv_b" position="attributes">
-                    <attributes invisible="True"/>
+                    <attribute name="invisible">True</attribute>
+                </field>
+                <field name="str_motiv_c" position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </field>
                 <field name="str_motiv_d" position="attributes">
-                    <attributes invisible="True"/>
+                    <attribute name="invisible">True</attribute>
                 </field>
                 <field name="str_motiv_e" position="attributes">
-                    <attributes invisible="True"/>
+                    <attribute name="invisible">True</attribute>
                 </field>
             </field>
         </record>
