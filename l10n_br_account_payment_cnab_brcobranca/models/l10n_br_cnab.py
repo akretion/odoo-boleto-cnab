@@ -152,7 +152,7 @@ class L10nBrHrCnab(models.Model):
                        u' * - BOLETO NÃO ENCONTRADO DENTRO DO PROGRAMA',
                    'nosso_numero': dict_line['nosso_numero'],
                    'seu_numero': dict_line['documento_numero'],
-                   'valor_pagamento': valor_titulo,
+                   'valor_titulo': valor_titulo,
                 }
                 self.env['l10n.br.cnab.evento'].create(vals_evento)
                 continue
@@ -178,6 +178,7 @@ class L10nBrHrCnab(models.Model):
                     'seu_numero': dict_line['documento_numero'] or
                         obj_account_move_line.name,
                     # 'tipo_moeda': evento.credito_moeda_tipo,
+                    'valor_titulo': valor_titulo,
                     'valor_pagamento': valor_recebido,
                     'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
                         dict_line['codigo_ocorrencia']].encode('utf-8'),
@@ -216,7 +217,7 @@ class L10nBrHrCnab(models.Model):
                     'data_ocorrencia': data_ocorrencia,
                     'nosso_numero': dict_line['nosso_numero'],
                     'seu_numero': obj_account_move_line.name,
-                    'valor_pagamento': valor_titulo,
+                    'valor_titulo': valor_titulo,
                 }
 
             self.env['l10n.br.cnab.evento'].create(vals_evento)
@@ -225,10 +226,6 @@ class L10nBrHrCnab(models.Model):
         lote_id.qtd_registros = quantidade_registros
         self.num_lotes = 1
         self.num_eventos = quantidade_registros
-
-        # FIXME - Encontrar uma forma melhor de localizar a conta bancaria
-        lote_id.account_bank_id =\
-            obj_account_move_line.payment_mode_id.bank_id
 
         # Criacao de um Extrato Bancario para ser conciliado
         # pelo usuario permitindo assim o tratamento de valores
@@ -252,3 +249,4 @@ class L10nBrHrCnabEvento(models.Model):
     _inherit = "l10n.br.cnab.evento"
 
     data_ocorrencia = fields.Date(string=u"Data da Ocorrência")
+    valor_titulo = fields.Float(string=u"Valor do Título")

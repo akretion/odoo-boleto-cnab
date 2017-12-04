@@ -10,6 +10,9 @@
                 <field name="data_real_pagamento" position="before">
                     <field name="data_ocorrencia" />
                 </field>
+                <field name="valor_pagamento" position="before">
+                    <field name="valor_titulo" />
+                </field>
                 <field name="str_motiv_b" position="attributes">
                     <attributes invisible="True"/>
                 </field>
