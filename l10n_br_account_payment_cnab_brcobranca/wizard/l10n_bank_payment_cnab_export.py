@@ -5,6 +5,7 @@
 
 import base64
 import time
+from datetime import datetime
 
 from openerp import models, api, workflow, fields, _
 from openerp.addons.l10n_br_base.tools.misc import punctuation_rm
@@ -106,6 +107,26 @@ class L10nPaymentCnab(models.TransientModel):
                     'uf_sacado': line.partner_id.state_id.code,
                     'identificacao_ocorrencia': order.codigo_instrucao_movimento
                 }
+                if line.move_line_id.payment_mode_id.boleto_perc_mora:
+                    linhas_pagamentos['codigo_multa'] = '2'
+                    linhas_pagamentos['percentual_multa'] =\
+                        line.move_line_id.payment_mode_id.boleto_perc_mora
+                precision = self.env['decimal.precision']
+                precision_account = precision.precision_get('Account')
+                if line.move_line_id.payment_mode_id.cnab_percent_interest:
+                    linhas_pagamentos['valor_mora'] = round(
+                        line.move_line_id.debit *
+                        ((line.move_line_id.payment_mode_id.cnab_percent_interest / 100)
+                         / 30), precision_account)
+                if line.move_line_id.payment_term_id.discount_perc:
+                    linhas_pagamentos['data_desconto'] = datetime.strptime(
+                        line.move_line_id.date_maturity,
+                          '%Y-%m-%d').strftime('%Y/%m/%d')
+                    linhas_pagamentos['valor_desconto'] = round(
+                        line.move_line_id.debit * (
+                            line.move_line_id.payment_term_id.discount_perc / 100),
+                        precision_account)
+
                 pagamentos.append(linhas_pagamentos)
 
             remessa_values = {
@@ -125,7 +146,6 @@ class L10nPaymentCnab(models.TransientModel):
             }
 
             content = json.dumps(remessa_values)
-            # print content
             f = open(tempfile.mktemp(), 'w')
             f.write(content)
             f.close()
@@ -143,7 +163,8 @@ class L10nPaymentCnab(models.TransientModel):
             else:
                 raise UserError(res.text)
 
-            # print remessa
+            print "REMESSA ======", remessa.encode('utf-8')
+            #print error
             self.state = 'done'
             self.cnab_file = base64.b64encode(remessa)
 
