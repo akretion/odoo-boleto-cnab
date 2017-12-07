@@ -95,15 +95,17 @@ class L10nPaymentCnab(models.TransientModel):
                     'data_vencimento': line.move_line_id.date_maturity,
                     'nosso_numero': our_number or line.id,
                     'documento_sacado': punctuation_rm(line.partner_id.cnpj_cpf),
-                    'nome_sacado': line.partner_id.legal_name,
-                    'numero_documento': str(line.move_line_id.name.encode('utf-8')),
+                    'nome_sacado':
+                        line.partner_id.legal_name.encode('utf-8').strip()[:40],
+                    'numero': str(line.move_line_id.name.encode('utf-8'))[:10],
                     'endereco_sacado': str(
                        line.partner_id.street + ', ' + str(
-                           line.partner_id.number)).encode('utf-8'),
-                    'bairro_sacado': line.partner_id.district.encode('utf-8'),
+                           line.partner_id.number)).encode('utf-8')[:40],
+                    'bairro_sacado':
+                           line.partner_id.district.encode('utf-8').strip(),
                     'cep_sacado': punctuation_rm(line.partner_id.zip),
                     'cidade_sacado':
-                       line.partner_id.l10n_br_city_id.name.encode('utf-8'),
+                        line.partner_id.l10n_br_city_id.name.encode('utf-8'),
                     'uf_sacado': line.partner_id.state_id.code,
                     'identificacao_ocorrencia': order.codigo_instrucao_movimento
                 }
@@ -163,8 +165,6 @@ class L10nPaymentCnab(models.TransientModel):
             else:
                 raise UserError(res.text)
 
-            print "REMESSA ======", remessa.encode('utf-8')
-            #print error
             self.state = 'done'
             self.cnab_file = base64.b64encode(remessa)
 
