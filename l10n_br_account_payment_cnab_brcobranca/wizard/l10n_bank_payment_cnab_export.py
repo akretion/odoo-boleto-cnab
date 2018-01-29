@@ -99,8 +99,8 @@ class L10nPaymentCnab(models.TransientModel):
                         line.partner_id.legal_name.encode('utf-8').strip()[:40],
                     'numero': str(line.move_line_id.name.encode('utf-8'))[:10],
                     'endereco_sacado': str(
-                       line.partner_id.street + ', ' + str(
-                           line.partner_id.number)).encode('utf-8')[:40],
+                       line.partner_id.street.encode('utf-8') + ', ' + str(
+                           line.partner_id.number.encode('utf-8')))[:40],
                     'bairro_sacado':
                            line.partner_id.district.encode('utf-8').strip(),
                     'cep_sacado': punctuation_rm(line.partner_id.zip),
