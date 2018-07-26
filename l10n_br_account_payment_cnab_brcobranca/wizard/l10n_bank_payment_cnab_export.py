@@ -85,15 +85,10 @@ class L10nPaymentCnab(models.TransientModel):
             pagamentos = []
             for line in order.line_ids:
 
-                our_number = ''
-
-                if len(line.move_line_id.transaction_ref or '') == 16:
-                    our_number = line.move_line_id.transaction_ref[3:-2]
-
                 linhas_pagamentos = {
                     'valor': line.amount_currency,
                     'data_vencimento': line.move_line_id.date_maturity,
-                    'nosso_numero': our_number or line.id,
+                    'nosso_numero': line.move_line_id.boleto_own_number,
                     'documento_sacado': punctuation_rm(line.partner_id.cnpj_cpf),
                     'nome_sacado':
                         line.partner_id.legal_name.encode('utf-8').strip()[:40],
