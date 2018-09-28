@@ -59,6 +59,104 @@ DICT_OCORRENCIAS_BRADESCO = {
           u' informadas com Zeros.',
 }
 
+DICT_OCORRENCIAS_ITAU = {
+    '02': u'ENTRADA CONFIRMADA COM POSSIBILIDADE DE MENSAGEM'
+          u' (NOTA 20 – TABELA 10)',
+    '03': u'ENTRADA REJEITADA (NOTA 20 – TABELA 1)',
+    '04': u'ALTERAÇÃO DE DADOS – NOVA ENTRADA OU ALTERAÇÃO/EXCLUSÃO'
+          u' DE DADOS ACATADA',
+    '05': u'ALTERAÇÃO DE DADOS – BAIXA',
+    '06': u'LIQUIDAÇÃO NORMAL',
+    '07': u'LIQUIDAÇÃO PARCIAL – COBRANÇA INTELIGENTE (B2B)',
+    '08': u'LIQUIDAÇÃO EM CARTÓRIO',
+    '09': u'BAIXA SIMPLES',
+    '10': u'BAIXA POR TER SIDO LIQUIDADO',
+    '11': u'EM SER (SÓ NO RETORNO MENSAL)',
+    '12': u'ABATIMENTO CONCEDIDO',
+    '13': u'ABATIMENTO CANCELADO',
+    '14': u'VENCIMENTO ALTERADO',
+    '15': u'BAIXAS REJEITADAS (NOTA 20 – TABELA 4)',
+    '16': u'INSTRUÇÕES REJEITADAS (NOTA 20 – TABELA 3)',
+    '17': u'ALTERAÇÃO/EXCLUSÃO DE DADOS REJEITADOS (NOTA 20 – TABELA 2)',
+    '18': u'COBRANÇA CONTRATUAL – INSTRUÇÕES/ALTERAÇÕES'
+          u' REJEITADAS/PENDENTES (NOTA 20 – TABELA 5)',
+    '19': u'CONFIRMA RECEBIMENTO DE INSTRUÇÃO DE PROTESTO',
+    '20': u'CONFIRMA RECEBIMENTO DE INSTRUÇÃO DE SUSTAÇÃO'
+          u' DE PROTESTO /TARIFA',
+    '21': u'CONFIRMA RECEBIMENTO DE INSTRUÇÃO DE NÃO PROTESTAR',
+    '23': u'TÍTULO ENVIADO A CARTÓRIO/TARIFA',
+    '24': u'INSTRUÇÃO DE PROTESTO REJEITADA / SUSTADA / PENDENTE'
+          u' (NOTA 20 – TABELA 7)',
+    '25': u'ALEGAÇÕES DO PAGADOR (NOTA 20 – TABELA 6)',
+    '26': u'TARIFA DE AVISO DE COBRANÇA',
+    '27': u'TARIFA DE EXTRATO POSIÇÃO (B40X)',
+    '28': u'TARIFA DE RELAÇÃO DAS LIQUIDAÇÕES',
+    '29': u'TARIFA DE MANUTENÇÃO DE TÍTULOS VENCIDOS',
+    '30': u'DÉBITO MENSAL DE TARIFAS (PARA ENTRADAS E BAIXAS)',
+    '32': u'BAIXA POR TER SIDO PROTESTADO',
+    '33': u'CUSTAS DE PROTESTO',
+    '34': u'CUSTAS DE SUSTAÇÃO',
+    '35': u'CUSTAS DE CARTÓRIO DISTRIBUIDOR',
+    '36': u'CUSTAS DE EDITAL',
+    '37': u'TARIFA DE EMISSÃO DE BOLETO/TARIFA DE ENVIO DE DUPLICATA',
+    '38': u'TARIFA DE INSTRUÇÃO',
+    '39': u'TARIFA DE OCORRÊNCIAS',
+    '40': u'TARIFA MENSAL DE EMISSÃO DE BOLETO/TARIFA MENSAL'
+          u' DE ENVIO DE DUPLICATA',
+    '41': u'DÉBITO MENSAL DE TARIFAS – EXTRATO DE POSIÇÃO (B4EP/B4OX)',
+    '42': u'DÉBITO MENSAL DE TARIFAS – OUTRAS INSTRUÇÕES',
+    '43': u'DÉBITO MENSAL DE TARIFAS – MANUTENÇÃO DE TÍTULOS VENCIDOS',
+    '44': u'DÉBITO MENSAL DE TARIFAS – OUTRAS OCORRÊNCIAS',
+    '45': u'DÉBITO MENSAL DE TARIFAS – PROTESTO',
+    '46': u'DÉBITO MENSAL DE TARIFAS – SUSTAÇÃO DE PROTESTO',
+    '47': u'BAIXA COM TRANSFERÊNCIA PARA DESCONTO',
+    '48': u'CUSTAS DE SUSTAÇÃO JUDICIAL',
+    '51': u'TARIFA MENSAL REF A ENTRADAS BANCOS CORRESPONDENTES NA CARTEIRA',
+    '52': u'TARIFA MENSAL BAIXAS NA CARTEIRA',
+    '53': u'TARIFA MENSAL BAIXAS EM BANCOS CORRESPONDENTES NA CARTEIRA',
+    '54': u'TARIFA MENSAL DE LIQUIDAÇÕES NA CARTEIRA',
+    '55': u'TARIFA MENSAL DE LIQUIDAÇÕES EM BANCOS'
+          u' CORRESPONDENTES NA CARTEIRA',
+    '56': u'CUSTAS DE IRREGULARIDADE',
+    '57': u'INSTRUÇÃO CANCELADA (NOTA 20 – TABELA 8)',
+    '59': u'BAIXA POR CRÉDITO EM C/C ATRAVÉS DO SISPAG',
+    '60': u'ENTRADA REJEITADA CARNÊ (NOTA 20 – TABELA 1)',
+    '61': u'TARIFA EMISSÃO AVISO DE MOVIMENTAÇÃO DE TÍTULOS (2154)',
+    '62': u'DÉBITO MENSAL DE TARIFA – AVISO DE MOVIMENTAÇÃO DE TÍTULOS (2154)',
+    '63': u'TÍTULO SUSTADO JUDICIALMENTE',
+    '64': u'ENTRADA CONFIRMADA COM RATEIO DE CRÉDITO',
+    '65': u'PAGAMENTO COM CHEQUE – AGUARDANDO COMPENSAÇÃO',
+    '69': u'CHEQUE DEVOLVIDO (NOTA 20 – TABELA 9)',
+    '71': u'ENTRADA REGISTRADA, AGUARDANDO AVALIAÇÃO',
+    '72': u'BAIXA POR CRÉDITO EM C/C ATRAVÉS DO SISPAG'
+          u' SEM TÍTULO CORRESPONDENTE',
+    '73': u'CONFIRMAÇÃO DE ENTRADA NA COBRANÇA SIMPLES –'
+          u' ENTRADA NÃO ACEITA NA COBRANÇA CONTRATUAL',
+    '74': u'INSTRUÇÃO DE NEGATIVAÇÃO EXPRESSA REJEITADA (NOTA 20 – TABELA 11)',
+    '75': u'CONFIRMAÇÃO DE RECEBIMENTO DE INSTRUÇÃO DE ENTRADA'
+          u' EM NEGATIVAÇÃO EXPRESSA',
+    '76': u'CHEQUE COMPENSADO',
+    '77': u'CONFIRMAÇÃO DE RECEBIMENTO DE INSTRUÇÃO DE EXCLUSÃO DE'
+          u' ENTRADA EM NEGATIVAÇÃO EXPRESSA',
+    '78': u'CONFIRMAÇÃO DE RECEBIMENTO DE INSTRUÇÃO DE CANCELAMENTO DE'
+          u' NEGATIVAÇÃO EXPRESSA',
+    '79': u'NEGATIVAÇÃO EXPRESSA INFORMACIONAL (NOTA 20 – TABELA 12)',
+    '80': u'CONFIRMAÇÃO DE ENTRADA EM NEGATIVAÇÃO EXPRESSA – TARIFA',
+    '82': u'CONFIRMAÇÃO DO CANCELAMENTO DE NEGATIVAÇÃO EXPRESSA – TARIFA',
+    '83': u'CONFIRMAÇÃO DE EXCLUSÃO DE ENTRADA EM NEGATIVAÇÃO'
+          u' EXPRESSA POR LIQUIDAÇÃO – TARIFA',
+    '85': u'TARIFA POR BOLETO (ATÉ 03 ENVIOS) COBRANÇA ATIVA ELETRÔNICA',
+    '86': u'TARIFA EMAIL COBRANÇA ATIVA ELETRÔNICA',
+    '87': u'TARIFA SMS COBRANÇA ATIVA ELETRÔNICA',
+    '88': u'TARIFA MENSAL POR BOLETO (ATÉ 03 ENVIOS)'
+          u' COBRANÇA ATIVA ELETRÔNICA',
+    '89': u'TARIFA MENSAL EMAIL COBRANÇA ATIVA ELETRÔNICA',
+    '90': u'TARIFA MENSAL SMS COBRANÇA ATIVA ELETRÔNICA',
+    '91': u'TARIFA MENSAL DE EXCLUSÃO DE ENTRADA DE NEGATIVAÇÃO EXPRESSA',
+    '92': u'TARIFA MENSAL DE CANCELAMENTO DE NEGATIVAÇÃO EXPRESSA',
+    '93': u'TARIFA MENSAL DE EXCLUSÃO DE NEGATIVAÇÃO EXPRESSA POR LIQUIDAÇÃO',
+}
+
 
 class L10nBrHrCnab(models.Model):
     _inherit = "l10n.br.cnab"
@@ -76,10 +174,8 @@ class L10nBrHrCnab(models.Model):
         states={'draft': [('readonly', False)]}
     )
     bank = fields.Selection(
-        [('bradesco', u'Bradesco')], 'Bank',
-        default='bradesco',
-        readonly=True,
-        states={'draft': [('readonly', False)]}
+        [('bradesco', u'Bradesco'), ('itau', u'Itaú')],
+        string='Bank', states={'draft': [('readonly', False)]}
     )
 
     @api.multi
@@ -99,11 +195,10 @@ class L10nBrHrCnab(models.Model):
         string_result = res.json()
         data = json.loads(string_result)
 
-        if self.cnab_type == 'cnab400' and self.bank == 'bradesco':
-            self.processar_arquivo_retorno_cnab400_bradesco(data)
+        self.processar_arquivo_retorno_cnab400(data)
 
     @api.multi
-    def processar_arquivo_retorno_cnab400_bradesco(self, data):
+    def processar_arquivo_retorno_cnab400(self, data):
 
         lote_id = self.env['l10n.br.cnab.lote'].create({'cnab_id': self.id})
 
@@ -114,9 +209,13 @@ class L10nBrHrCnab(models.Model):
 
         for dict_line in data:
             if int(dict_line['codigo_registro']) != 1:
+                # Bradesco
                 # Existe o codigo de registro 9 que eh um totalizador
                 # porem os campos estao colocados em outras posicoes
                 # que nao estao mapeadas no BRCobranca
+                # Itau
+                # 9 - Registro Trailer do Arquivo
+                # 4 e 5 - Registro de Detalhe (Opcional)
                 continue
 
             quantidade_registros += 1
@@ -145,11 +244,18 @@ class L10nBrHrCnab(models.Model):
                 data_ocorrencia = datetime.datetime.strptime(
                     str(dict_line['data_ocorrencia']), "%d%m%y").date()
 
+            # Cada Banco pode possuir um Codigo de Ocorrencia distinto
+            if self.bank == 'bradesco':
+                descricao_ocorrencia = DICT_OCORRENCIAS_BRADESCO[
+                       dict_line['codigo_ocorrencia']].encode('utf-8')
+            if self.bank == 'itau':
+                descricao_ocorrencia = DICT_OCORRENCIAS_ITAU[
+                       dict_line['codigo_ocorrencia']].encode('utf-8')
+
             if not account_move_line:
                 vals_evento = {
                    'lote_id': lote_id.id,
-                   'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
-                       dict_line['codigo_ocorrencia']],
+                   'ocorrencias': descricao_ocorrencia,
                    'data_ocorrencia': data_ocorrencia,
                    'str_motiv_a':
                        u' * - BOLETO NÃO ENCONTRADO DENTRO DO PROGRAMA',
@@ -167,13 +273,16 @@ class L10nBrHrCnab(models.Model):
                 data_credito = datetime.datetime.strptime(
                     str(dict_line['data_credito']), "%d%m%y").date()
 
-            if dict_line['codigo_ocorrencia'] in ('06', '17'):
+            if (str(dict_line['codigo_ocorrencia']) in ('06', '17')
+                    and self.bank == 'bradesco') or (
+                        str(dict_line['codigo_ocorrencia']) in ('06', '10') and
+                        self.bank == 'itau'):
                 vals_evento = {
                     'lote_id': lote_id.id,
                     'data_ocorrencia': data_ocorrencia,
                     'data_real_pagamento': data_credito.strftime("%Y-%m-%d"),
                     # 'segmento': evento.servico_segmento,
-                    #'favorecido_nome':
+                    # 'favorecido_nome':
                     #    obj_account_move_line.company_id.partner_id.name,
                     'favorecido_conta_bancaria':
                         account_move_line.payment_mode_id.bank_id.id,
@@ -183,8 +292,7 @@ class L10nBrHrCnab(models.Model):
                     # 'tipo_moeda': evento.credito_moeda_tipo,
                     'valor_titulo': valor_titulo,
                     'valor_pagamento': valor_recebido,
-                    'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
-                        dict_line['codigo_ocorrencia']].encode('utf-8'),
+                    'ocorrencias': descricao_ocorrencia,
                     'bank_payment_line_id':
                         payment_line.bank_line_id.id or False,
                 }
@@ -205,8 +313,7 @@ class L10nBrHrCnab(models.Model):
             else:
                 vals_evento = {
                     'lote_id': lote_id.id,
-                    'ocorrencias': DICT_OCORRENCIAS_BRADESCO[
-                        dict_line['codigo_ocorrencia']].encode('utf-8'),
+                    'ocorrencias': descricao_ocorrencia,
                     'data_ocorrencia': data_ocorrencia,
                     'nosso_numero': dict_line['nosso_numero'],
                     'seu_numero': account_move_line.name,

@@ -34,10 +34,9 @@ dict_brcobranca_bank = {
     '341': 'itau',
     '033': 'santander',
     '748': 'sicredi',
-    # banks implemented in brcobranca but not in Python:
-    # '004': 'banco_nordeste',
-    # '021': 'banestes',
-    # '756': 'sicoob',
+    '004': 'banco_nordeste',
+    '021': 'banestes',
+    '756': 'sicoob',
 }
 
 dict_brcobranca_cnab_type = {
@@ -75,10 +74,10 @@ class L10nPaymentCnab(models.TransientModel):
                     _('The Bank %s is not implemented in BRCobranca.')
                     % order.mode.bank_id.bank.name)
 
-            if (bank_name_brcobranca[0] != 'bradesco'
-                and order.mode.type.code != '400'):
+            if (bank_name_brcobranca[0] not in ('bradesco', 'itau')
+                    or order.mode.type.code != '400'):
                 raise UserError(
-                    _('The Bank %s and CNAB %s is not implemented.')
+                    _('The Bank %s and CNAB %s are not implemented.')
                     % (order.mode.bank_id.bank.name,
                        order.mode.type.code))
 
@@ -137,10 +136,14 @@ class L10nPaymentCnab(models.TransientModel):
                 'documento_cedente': punctuation_rm(
                     order.mode.bank_id.partner_id.cnpj_cpf),
                 'pagamentos': pagamentos,
-                'codigo_empresa': int(order.mode.codigo_convenio),
                 'sequencial_remessa': self.env['ir.sequence'].next_by_id(
                     order.mode.cnab_sequence_id.id)
             }
+
+            if (bank_name_brcobranca[0] == 'bradesco'
+                    and order.mode.type.code == '400'):
+                remessa_values[
+                    'codigo_empresa'] = int(order.mode.codigo_convenio)
 
             content = json.dumps(remessa_values)
             f = open(tempfile.mktemp(), 'w')
