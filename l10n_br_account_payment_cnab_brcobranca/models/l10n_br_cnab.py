@@ -8,8 +8,8 @@ import requests
 import json
 import datetime
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 DICT_OCORRENCIAS_BRADESCO = {
     '02': u'Entrada Confirmada (verificar motivo na posição 319 a 328)',

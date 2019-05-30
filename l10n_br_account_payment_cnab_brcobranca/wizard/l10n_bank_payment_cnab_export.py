@@ -7,8 +7,8 @@ import base64
 import time
 from datetime import datetime
 
-from openerp import models, api, workflow, fields, _
-from openerp.addons.l10n_br_base.tools.misc import punctuation_rm
+from odoo import models, api, workflow, fields, _
+from odoo.addons.l10n_br_base.tools.misc import punctuation_rm
 
 import logging
 
@@ -16,7 +16,7 @@ import logging
 import requests
 import json
 import tempfile
-from openerp.exceptions import Warning as UserError
+from odoo.exceptions import Warning as UserError
 
 
 _logger = logging.getLogger(__name__)
