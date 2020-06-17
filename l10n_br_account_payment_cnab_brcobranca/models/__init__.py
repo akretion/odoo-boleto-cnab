@@ -4,3 +4,4 @@
 
 from . import l10n_br_cnab
 from . import payment_mode
+from . import account_payment_order
