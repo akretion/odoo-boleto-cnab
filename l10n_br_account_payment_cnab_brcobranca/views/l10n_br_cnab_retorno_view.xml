@@ -3,8 +3,8 @@
 
     <record id="brcobranca_view_cnab_evento_tree" model="ir.ui.view">
         <field name="name">brcobranca.cnab.evento.tree</field>
-        <field name="model">l10n.br.cnab.evento</field>
-        <field name="inherit_id" ref="l10n_br_account_banking_payment_cnab.view_cnab_evento_tree"/>
+        <field name="model">l10n_br.cnab.evento</field>
+        <field name="inherit_id" ref="l10n_br_account_payment_cobranca.view_cnab_evento_tree"/>
         <field name="arch" type="xml">
             <field name="data_real_pagamento" position="before">
                 <field name="data_ocorrencia" />
@@ -12,25 +12,13 @@
             <field name="valor_pagamento" position="before">
                 <field name="valor_titulo" />
             </field>
-            <field name="str_motiv_b" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </field>
-            <field name="str_motiv_c" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </field>
-            <field name="str_motiv_d" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </field>
-            <field name="str_motiv_e" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </field>
         </field>
     </record>
 
     <record id="brcobranca_cnab_retorno_form_view" model="ir.ui.view">
         <field name="name">brcobranca.cnab.retorno.form.view</field>
-        <field name="model">l10n.br.cnab</field>
-        <field name="inherit_id" ref="l10n_br_account_banking_payment_cnab.cnab_retorno_form_view"/>
+        <field name="model">l10n_br.cnab</field>
+        <field name="inherit_id" ref="l10n_br_account_payment_cobranca.cnab_retorno_form_view"/>
         <field name="arch" type="xml">
             <field name="arquivo_retorno" position="after">
                 <field name="account_journal" widget="many2one"
