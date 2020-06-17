@@ -7,7 +7,7 @@ from odoo import models, fields
 
 
 class PaymentMode(models.Model):
-    _inherit = 'payment.mode'
+    _inherit = 'account.payment.mode'
     
     cnab_sequence_id = fields.Many2one(
         comodel_name='ir.sequence',

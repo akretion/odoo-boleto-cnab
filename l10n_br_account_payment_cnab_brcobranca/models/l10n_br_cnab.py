@@ -159,7 +159,7 @@ DICT_OCORRENCIAS_ITAU = {
 
 
 class L10nBrHrCnab(models.Model):
-    _inherit = "l10n.br.cnab"
+    _inherit = "l10n_br.cnab"
 
     account_journal = fields.Many2one(
         'account.journal', 'Journal used in Bank Statement',
@@ -263,7 +263,7 @@ class L10nBrHrCnab(models.Model):
                    'seu_numero': dict_line['documento_numero'],
                    'valor_titulo': valor_titulo,
                 }
-                self.env['l10n.br.cnab.evento'].create(vals_evento)
+                self.env['l10n_br.cnab.evento'].create(vals_evento)
                 continue
 
             if (dict_line['data_credito'] == '000000' or
@@ -320,7 +320,7 @@ class L10nBrHrCnab(models.Model):
                     'valor_titulo': valor_titulo,
                 }
 
-            self.env['l10n.br.cnab.evento'].create(vals_evento)
+            self.env['l10n_br.cnab.evento'].create(vals_evento)
 
         lote_id.total_valores = total_valores
         lote_id.qtd_registros = quantidade_registros
@@ -346,7 +346,7 @@ class L10nBrHrCnab(models.Model):
 
 
 class L10nBrHrCnabEvento(models.Model):
-    _inherit = "l10n.br.cnab.evento"
+    _inherit = "l10n_br.cnab.evento"
 
     data_ocorrencia = fields.Date(string=u"Data da Ocorrência")
     valor_titulo = fields.Float(string=u"Valor do Título")
