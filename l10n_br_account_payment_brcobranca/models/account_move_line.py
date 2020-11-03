@@ -3,49 +3,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-from datetime import datetime
 
 from odoo import models, api, _
-from odoo.exceptions import Warning as UserError
+from ..constants.br_cobranca import (
+    get_brcobranca_bank,
+    DICT_BRCOBRANCA_CURRENCY,
+)
 
 _logger = logging.getLogger(__name__)
-
-
-class BoletoWrapper(object):
-    def __init__(self, boleto_cnab_api_data):
-        # wrap the object
-        # self._wrapped_obj = obj
-        self.boleto_cnab_api_data = boleto_cnab_api_data
-
-    def __getattr__(self, attr):
-        # see if this object has attr
-        # NOTE do not use hasattr, it goes into
-        # infinite recurrsion
-        if attr in self.__dict__:
-            # this object has it
-            return getattr(self, attr)
-        # proxy to the wrapped object
-        return getattr(self._wrapped_obj, attr)
-
-
-dict_brcobranca_bank = {
-    '001': 'banco_brasil',
-    '041': 'banrisul',
-    '237': 'bradesco',
-    '104': 'caixa',
-    '399': 'hsbc',
-    '341': 'itau',
-    '033': 'santander',
-    '748': 'sicred',
-    '004': 'banco_nordeste',
-    '021': 'banestes',
-    '756': 'sicoob',
-    '136': 'unicred',
-}
-
-dict_brcobranca_currency = {
-    'R$': '9',
-}
 
 
 class AccountMoveLine(models.Model):
@@ -64,16 +29,9 @@ class AccountMoveLine(models.Model):
         wrapped_boleto_list = []
 
         for move_line in self:
-            bank_account = \
-                move_line.payment_mode_id.fixed_journal_id.bank_account_id
-            if bank_account.bank_id.code_bc in dict_brcobranca_bank:
-                bank_name_brcobranca = dict_brcobranca_bank[
-                                           bank_account.bank_id.code_bc],
-            else:
-                raise UserError(
-                    _('The Bank %s is not implemented in BRCobranca.') %
-                    bank_account.bank_id.name)
 
+            bank_account_id = move_line.payment_mode_id.fixed_journal_id.bank_account_id
+            bank_name_brcobranca = get_brcobranca_bank(bank_account_id)
             precision = self.env['decimal.precision']
             precision_account = precision.precision_get('Account')
 
@@ -91,8 +49,8 @@ class AccountMoveLine(models.Model):
                   'documento_cedente': move_line.company_id.cnpj_cpf,
                   'sacado': move_line.partner_id.legal_name,
                   'sacado_documento': move_line.partner_id.cnpj_cpf,
-                  'agencia': bank_account.bra_number,
-                  'conta_corrente': bank_account.acc_number,
+                  'agencia': bank_account_id.bra_number,
+                  'conta_corrente': bank_account_id.acc_number,
                   'convenio': move_line.payment_mode_id.boleto_convetion,
                   'carteira': str(move_line.payment_mode_id.boleto_wallet),
                   'nosso_numero': int(''.join(
@@ -103,7 +61,7 @@ class AccountMoveLine(models.Model):
                   'data_documento':
                       move_line.invoice_id.date_invoice.strftime('%Y/%m/%d'),
                   'especie': move_line.payment_mode_id.boleto_species,
-                  'moeda': dict_brcobranca_currency['R$'],
+                  'moeda': DICT_BRCOBRANCA_CURRENCY['R$'],
                   'aceite': move_line.payment_mode_id.boleto_accept,
                   'sacado_endereco':
                       move_line.partner_id.street or '' + ', ' +
@@ -165,18 +123,18 @@ class AccountMoveLine(models.Model):
                     'instrucao5': instrucao_desconto_vencimento,
                 })
 
-            if bank_account.bank_id.code_bc in ('021', '004'):
+            if bank_account_id.bank_id.code_bc in ('021', '004'):
                 boleto_cnab_api_data.update({
                     'digito_conta_corrente':
                         move_line.payment_mode_id.bank_id.acc_number_dig,
                 })
 
             # Fields used in Sicredi and Sicoob Banks
-            if bank_account.bank_id.code_bc in ('748', '756'):
+            if bank_account_id.bank_id.code_bc in ('748', '756'):
                 boleto_cnab_api_data.update({
                     'byte_idt': move_line.payment_mode_id.boleto_byte_idt,
                     'posto': move_line.payment_mode_id.boleto_posto,
                 })
 
-            wrapped_boleto_list.append(BoletoWrapper(boleto_cnab_api_data))
+            wrapped_boleto_list.append(boleto_cnab_api_data)
         return wrapped_boleto_list
