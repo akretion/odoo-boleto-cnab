@@ -6,8 +6,14 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="button_print_boleto_invisible" invisible="1"/>
+            </field>
             <button name="action_invoice_draft" position="after">
-                <button name="view_boleto_pdf" type="object" string="Imprimir Boleto" class="btn-primary" states="open"/>
+                <button name="view_boleto_pdf" type="object" string="Imprimir Boleto"
+                        class="btn-primary"
+                        attrs="{'invisible': [('button_print_boleto_invisible', '=', True)]}"
+                />
             </button>
         </field>
     </record>

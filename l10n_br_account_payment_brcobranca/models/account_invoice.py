@@ -22,12 +22,34 @@ class AccountInvoice(models.Model):
         ondelete="restrict",
         copy=False)
 
+    # Usado para deixar invisivel o botão
+    # Imprimir Boleto, quando não for o caso
+    button_print_boleto_invisible = fields.Boolean(
+        compute='_get_button_print_boleto_invisible'
+    )
+
+    @api.depends('state')
+    def _get_button_print_boleto_invisible(self):
+
+        # Foi preciso criar um compute para isso pois o
+        # states="open" não funciona em conjunto com o attrs
+        # o programa ignora.
+        button_print_boleto_invisible = True
+
+        # Somente Modo de Pagto CNAB com state Aberto
+        if self.payment_mode_id.payment_method_code in \
+                ('240', '400', '500') and self.state == 'open':
+
+            button_print_boleto_invisible = False
+
+        self.button_print_boleto_invisible = button_print_boleto_invisible
+
     def gera_boleto_pdf(self):
         file_pdf = self.file_boleto_pdf_id
         self.file_boleto_pdf_id = False
         file_pdf.unlink()
 
-        receivable_ids = self.mapped('move_line_receivable_ids')
+        receivable_ids = self.mapped('financial_move_line_ids')
 
         boletos = receivable_ids.send_payment()
         if not boletos:

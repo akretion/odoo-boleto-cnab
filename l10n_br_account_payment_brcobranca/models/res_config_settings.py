@@ -20,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             boleto_cnab_api=self.env[
                 'ir.config_parameter'].sudo().get_param(
-                'l10n_br_account_payment_brcobranca.boleto_cnab_api')
+                'l10n_br_account_payment_brcobranca.boleto_cnab_api'),
         )
         return res
 

@@ -51,7 +51,7 @@ class AccountMoveLine(models.Model):
                   'sacado_documento': move_line.partner_id.cnpj_cpf,
                   'agencia': bank_account_id.bra_number,
                   'conta_corrente': bank_account_id.acc_number,
-                  'convenio': move_line.payment_mode_id.boleto_convetion,
+                  'convenio': move_line.payment_mode_id.code_convetion,
                   'carteira': str(move_line.payment_mode_id.boleto_wallet),
                   'nosso_numero': int(''.join(
                       i for i in move_line.own_number if i.isdigit())),
@@ -77,13 +77,13 @@ class AccountMoveLine(models.Model):
             if move_line.payment_mode_id.boleto_interest_perc > 0.0:
                 valor_juros = round(
                     move_line.debit *
-                    ((move_line.payment_mode_id.boleto_perc_mora / 100)
+                    ((move_line.payment_mode_id.boleto_interest_perc / 100)
                      / 30), precision_account)
                 instrucao_juros = (
                     'APÓS VENCIMENTO COBRAR PERCENTUAL' +
                     ' DE %s %% AO MÊS ( R$ %s AO DIA )'
                     % (('%.2f' %
-                        move_line.payment_mode_id.boleto_perc_mora
+                        move_line.payment_mode_id.boleto_interest_perc
                         ).replace('.', ','),
                        ('%.2f' % valor_juros).replace('.', ',')))
                 boleto_cnab_api_data.update({
@@ -133,7 +133,7 @@ class AccountMoveLine(models.Model):
             if bank_account_id.bank_id.code_bc in ('748', '756'):
                 boleto_cnab_api_data.update({
                     'byte_idt': move_line.payment_mode_id.boleto_byte_idt,
-                    'posto': move_line.payment_mode_id.boleto_posto,
+                    'posto': move_line.payment_mode_id.boleto_post,
                 })
 
             wrapped_boleto_list.append(boleto_cnab_api_data)
